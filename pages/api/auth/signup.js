@@ -1,6 +1,6 @@
 import User from "@/backend/model/user";
 import ConnectionDB from "@/backend/utils/connectDb";
-import hashPassword from "@/backend/utils/hashPassword";
+import { hashPassword } from "@/backend/utils/hashPassword";
 
 
 export default async function handler(req, res) {
@@ -21,19 +21,12 @@ export default async function handler(req, res) {
             message: 'Error: Connecting to the database'
         });
     };
-
     const { email, password } = req.body;
     if (!email || !password) return res.status(422).json({ success: false, status: 422, message: 'Check your email or password' });
-
     const user = await User.findOne({ email });
     if (user) return res.status(422).json({ success: false, status: 422, message: 'The user exists' });
-
     const resutlPassword = await hashPassword(password);
-    console.log(resutlPassword);
-
     const newUser = await User.create({ email, password: resutlPassword });
-    console.log(newUser);
-
     return res.status(201).json({
         success: true,
         status: 201,

@@ -1,7 +1,14 @@
-const { hash } = require("bcryptjs");
+const { hash, compare } = require("bcryptjs");
 
 
-export default async function hashPassword(password) {
+async function hashPassword(password) {
     const hashPasswor = await hash(password, 12);
     return hashPasswor;
 };
+
+async function verifyPassword(password, hash) {
+    const result = await compare(password, hash);
+    return result
+}
+
+export { hashPassword, verifyPassword }
