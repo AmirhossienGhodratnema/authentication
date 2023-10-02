@@ -1,6 +1,6 @@
 import User from "@/backend/model/user";
 import ConnectionDB from "@/backend/utils/connectDb";
-import { hashPassword } from "@/backend/utils/hashPassword";
+import { hashPassword } from "@/backend/utils/auth";
 
 
 export default async function handler(req, res) {

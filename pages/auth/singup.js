@@ -1,3 +1,4 @@
+import { verifyToken } from "@/backend/utils/auth";
 import { useRouter } from "next/router";
 import { useState } from "react"
 
@@ -7,6 +8,18 @@ export default function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
+
+    // useEffect(() => {
+    //     fetch('http://localhost:3000/api/user', {
+    //         method: 'GET',
+    //         headers: { 'Content-Type': 'application/json' }
+    //     })
+    //         .then(res => res.json())
+    //         .then(result => {
+    //             if(result.success) window.location.href = '/dashbord';
+    //         });
+    // }, []);
+    
     const handler = async () => {
         const res = await fetch('http://localhost:3000/api/auth/signup', {
             method: 'POST',
@@ -30,4 +43,13 @@ export default function SignUp() {
             <button onClick={handler}>singUp</button>
         </div>
     )
+}
+
+export async function getServerSideProps(context) {
+    const { U } = context.req.cookies;
+    const result = await verifyToken(U);
+    console.log(result)
+    if (result.success)
+        return { redirect: { destination: '/dashbord', permanent: false } };
+    return { props: { result } };
 }

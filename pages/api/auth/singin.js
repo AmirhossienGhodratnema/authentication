@@ -1,6 +1,6 @@
 import User from "@/backend/model/user";
 import ConnectionDB from "@/backend/utils/connectDb";
-import { verifyPassword } from "@/backend/utils/hashPassword";
+import { verifyPassword } from "@/backend/utils/auth";
 import { serialize } from "cookie";
 import { sign } from 'jsonwebtoken'
 
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     const { email, password } = req.body;
 
     const secretKeyssss = process.env.SECRETE_KEY;
-    const expiresIn = 24 * 60 * 60;
+    const expiresIn = (60 * 60) * 24;
 
 
     if (!email || !password) return res.status(422).json({ success: false, status: 422, message: 'Check your email or password' });
@@ -33,8 +33,8 @@ export default async function handler(req, res) {
     if (!resutlPassword) return res.status(400).json({ success: false, status: 400, message: 'The user profile is incorrect' });
 
     const token = sign({ email }, secretKeyssss, { expiresIn });
-    console.log(token);
-    return res.status(200).setHeader('Set-Cookie', serialize('u', token, {
+
+    return res.status(200).setHeader('Set-Cookie', serialize('U', String(token), {
         httpOnly: true,
         maxAge: expiresIn,
         path: '/'
