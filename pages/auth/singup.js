@@ -48,7 +48,6 @@ export default function SignUp() {
 export async function getServerSideProps(context) {
     const { U } = context.req.cookies;
     const result = await verifyToken(U);
-    console.log(result)
     if (result.success)
         return { redirect: { destination: '/dashbord', permanent: false } };
     return { props: { result } };
